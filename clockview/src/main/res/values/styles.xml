@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ClockView">
+        <item name="borderWidth">@dimen/defaultBorderWidth</item>
+        <item name="borderColor">@color/defaultBorderColor</item>
+        <item name="backgroundColor">@color/defaultBackgroundColor</item>
+        <item name="indicatorColor">@color/defaultIndicatorColor</item>
+
+        <item name="hourLabelColor">@color/defaultHourLabelColor</item>
+        <item name="hourLabelSize">@dimen/defaultHourLabelSize</item>
+        <item name="hourLabelMode">full</item>
+        <item name="hourHandleColor">@color/defaultHourHandleColor</item>
+        <item name="minuteHandleColor">@color/defaultMinuteHandleColor</item>
+        <item name="secondHandleColor">@color/defaultSecondHandleColor</item>
+        <item name="showSecondHandle">@bool/defaultShowSecondHandle</item>
+        <item name="secondHandleStyle">tick</item>
+    </style>
+</resources>

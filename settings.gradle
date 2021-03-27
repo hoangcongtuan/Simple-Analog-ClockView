@@ -1,0 +1,3 @@
+oinclude ':clockview'
+include ':app'
+rootProject.name = "Simple Clock View"

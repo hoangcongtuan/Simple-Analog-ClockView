@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="defaultBorderColor">#000000</color>
+    <color name="defaultBackgroundColor">#FFFFFF</color>
+    <color name="defaultIndicatorColor">#000000</color>
+    <color name="defaultHourLabelColor">#000000</color>
+    <color name="defaultHourHandleColor">#000000</color>
+    <color name="defaultMinuteHandleColor">#000000</color>
+    <color name="defaultSecondHandleColor">@color/red</color>
+
+    <dimen name="defaultBorderWidth">4dp</dimen>
+    <dimen name="defaultHourLabelSize">28sp</dimen>
+
+    <bool name="defaultShowSecondHandle">true</bool>
+</resources>
