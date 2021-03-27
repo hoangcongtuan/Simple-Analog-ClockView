@@ -78,8 +78,7 @@ public class ClockView extends View {
 
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        calendar = Calendar.getInstance();
-        clockRunnable = new ClockRunnable(this, calendar.get(Calendar.MILLISECOND));
+        clockRunnable = new ClockRunnable(this);
         clockRunnable.run();
     }
 
