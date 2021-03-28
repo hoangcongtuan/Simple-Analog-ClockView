@@ -15,6 +15,7 @@
         <item name="hourLabelMode">full</item>
         <item name="hourHandleColor">@color/defaultHourHandleColor</item>
         <item name="hourHandleStroke">@dimen/defaultHourHandleStroke</item>
+        <item name="showHourLabel">@bool/defaultShowHourLabel</item>
 
         <item name="minuteHandleColor">@color/defaultMinuteHandleColor</item>
         <item name="minuteHandleStroke">@dimen/defaultMinuteHandleStroke</item>

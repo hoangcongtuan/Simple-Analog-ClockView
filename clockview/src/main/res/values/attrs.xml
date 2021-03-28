@@ -16,6 +16,7 @@
             <enum name="simple" value="0" />
             <enum name="full" value="1" />
         </attr>
+        <attr name="showHourLabel" format="boolean" />
 
         <attr name="hourHandleColor" format="color" />
         <attr name="hourHandleStroke" format="dimension" />
