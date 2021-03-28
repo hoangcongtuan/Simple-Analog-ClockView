@@ -24,9 +24,10 @@ public class ClockView extends View {
     private final int indicatorColor;
     private final int indicatorStroke;
     private final int indicatorLength;
-    private int hourLabelColor;
+    private final int hourLabelColor;
     private final int hourLabelSize;
-    private HourLabelMode hourLabelMode;
+    private final HourLabelMode hourLabelMode;
+    private final boolean showHourLabel;
     private final int hourHandleColor;
     private final int hourHandleStroke;
     private final int minuteHandleColor;
@@ -66,12 +67,13 @@ public class ClockView extends View {
         indicatorLength = ta.getDimensionPixelSize(R.styleable.ClockView_indicatorLength, 0);
         indicatorStroke = ta.getDimensionPixelSize(R.styleable.ClockView_indicatorStroke, 0);
 
-
         hourLabelColor = ta.getColor(R.styleable.ClockView_hourLabelColor, 0);
         hourLabelSize = ta.getDimensionPixelSize(R.styleable.ClockView_hourLabelSize, 0);
         hourLabelMode = HourLabelMode.values()[
                 ta.getInt(R.styleable.ClockView_hourLabelMode, HourLabelMode.Full.getValue())
                 ];
+        showHourLabel = ta.getBoolean(R.styleable.ClockView_showHourLabel, true);
+
         hourHandleColor = ta.getColor(R.styleable.ClockView_hourHandleColor, 0);
         hourHandleStroke = ta.getDimensionPixelSize(R.styleable.ClockView_hourHandleStroke, 0);
 
@@ -141,7 +143,7 @@ public class ClockView extends View {
             canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
 
             //draw label
-            if (angle % HOUR_ANGLE_STEP == 0) {
+            if (angle % HOUR_ANGLE_STEP == 0 && showHourLabel) {
                 int drawStep = hourLabelMode == HourLabelMode.Simple ? HOUR_ANGLE_STEP * 3 : HOUR_ANGLE_STEP;
                 if (angle % drawStep == 0) {
                     paint.setStyle(Paint.Style.FILL);

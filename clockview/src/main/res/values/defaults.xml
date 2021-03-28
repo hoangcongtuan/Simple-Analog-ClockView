@@ -18,4 +18,5 @@
     <dimen name="defaultSecondHandleStroke">2dp</dimen>
 
     <bool name="defaultShowSecondHandle">true</bool>
+    <bool name="defaultShowHourLabel">true</bool>
 </resources>
