@@ -2,18 +2,47 @@
 <resources>
 
     <style name="ClockView">
-        <item name="borderWidth">@dimen/defaultBorderWidth</item>
+        <item name="borderStroke">@dimen/defaultBorderStroke</item>
         <item name="borderColor">@color/defaultBorderColor</item>
         <item name="backgroundColor">@color/defaultBackgroundColor</item>
+
         <item name="indicatorColor">@color/defaultIndicatorColor</item>
+        <item name="indicatorLength">@dimen/defaultIndicatorLength</item>
+        <item name="indicatorStroke">@dimen/defaultIndicatorStroke</item>
 
         <item name="hourLabelColor">@color/defaultHourLabelColor</item>
         <item name="hourLabelSize">@dimen/defaultHourLabelSize</item>
         <item name="hourLabelMode">full</item>
         <item name="hourHandleColor">@color/defaultHourHandleColor</item>
+        <item name="hourHandleStroke">@dimen/defaultHourHandleStroke</item>
+
         <item name="minuteHandleColor">@color/defaultMinuteHandleColor</item>
+        <item name="minuteHandleStroke">@dimen/defaultMinuteHandleStroke</item>
+
         <item name="secondHandleColor">@color/defaultSecondHandleColor</item>
+        <item name="secondHandleStroke">@dimen/defaultSecondHandleStroke</item>
         <item name="showSecondHandle">@bool/defaultShowSecondHandle</item>
         <item name="secondHandleStyle">tick</item>
+    </style>
+
+
+    <style name="ClockView.Medium">
+        <item name="borderStroke">1dp</item>
+        <item name="indicatorLength">6dp</item>
+        <item name="indicatorStroke">1.5dp</item>
+        <item name="hourLabelSize">20sp</item>
+        <item name="hourHandleStroke">4dp</item>
+        <item name="minuteHandleStroke">2dp</item>
+        <item name="secondHandleStroke">1dp</item>
+    </style>
+
+    <style name="ClockView.Small">
+        <item name="borderStroke">1dp</item>
+        <item name="indicatorLength">3dp</item>
+        <item name="indicatorStroke">0.5dp</item>
+        <item name="hourLabelSize">8sp</item>
+        <item name="hourHandleStroke">2.5dp</item>
+        <item name="minuteHandleStroke">1.5dp</item>
+        <item name="secondHandleStroke">1dp</item>
     </style>
 </resources>

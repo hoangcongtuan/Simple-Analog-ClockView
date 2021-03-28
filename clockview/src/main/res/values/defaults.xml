@@ -2,14 +2,20 @@
 <resources>
     <color name="defaultBorderColor">#000000</color>
     <color name="defaultBackgroundColor">#FFFFFF</color>
+
     <color name="defaultIndicatorColor">#000000</color>
     <color name="defaultHourLabelColor">#000000</color>
     <color name="defaultHourHandleColor">#000000</color>
     <color name="defaultMinuteHandleColor">#000000</color>
     <color name="defaultSecondHandleColor">@color/red</color>
 
-    <dimen name="defaultBorderWidth">4dp</dimen>
     <dimen name="defaultHourLabelSize">28sp</dimen>
+    <dimen name="defaultBorderStroke">2dp</dimen>
+    <dimen name="defaultIndicatorStroke">2dp</dimen>
+    <dimen name="defaultIndicatorLength">10dp</dimen>
+    <dimen name="defaultHourHandleStroke">6dp</dimen>
+    <dimen name="defaultMinuteHandleStroke">4dp</dimen>
+    <dimen name="defaultSecondHandleStroke">2dp</dimen>
 
     <bool name="defaultShowSecondHandle">true</bool>
 </resources>
