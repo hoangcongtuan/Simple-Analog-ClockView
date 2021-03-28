@@ -13,8 +13,8 @@ import androidx.annotation.Nullable;
 import java.util.Calendar;
 
 public class ClockView extends View {
-    private static final int ANGLE_STEP = 360 / (12 * 5);
-    private static final int HOUR_ANGLE_STEP = 360 / 12;
+    private static final int INDICATOR_STEP_DEGREE = 360 / (12 * 5);
+    private static final int HOUR_STEP_DEGREE = 360 / 12;
     private final int[] center = new int[2];
     private final int[] startPoint = new int[2];
     private final Rect textBound = new Rect();
@@ -34,7 +34,7 @@ public class ClockView extends View {
     private final int minuteHandleStroke;
     private final int secondHandleColor;
     private final int secondHandleStroke;
-    private boolean showSecondHandle;
+    private final boolean showSecondHandle;
     private SecondHandleStyle secondHandleStyle;
     private Paint paint;
     private int clockSize;
@@ -136,8 +136,8 @@ public class ClockView extends View {
 
             int[] p1 = Util.rotatePoint(startPoint, angle, center);
 
-            int _indicatorLength = (angle % HOUR_ANGLE_STEP == 0) ? (indicatorLength * 2) : indicatorLength;
-            int _indicatorStroke = (angle % HOUR_ANGLE_STEP == 0) ? indicatorStroke * 2 : indicatorStroke;
+            int _indicatorLength = (angle % HOUR_STEP_DEGREE == 0) ? (indicatorLength * 2) : indicatorLength;
+            int _indicatorStroke = (angle % HOUR_STEP_DEGREE == 0) ? indicatorStroke * 2 : indicatorStroke;
             paint.setStrokeWidth(_indicatorStroke);
 
             p2[0] = startPoint[0];
@@ -146,8 +146,8 @@ public class ClockView extends View {
             canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
 
             //draw label
-            if (angle % HOUR_ANGLE_STEP == 0 && showHourLabel) {
-                int drawStep = hourLabelMode == HourLabelMode.Simple ? HOUR_ANGLE_STEP * 3 : HOUR_ANGLE_STEP;
+            if (angle % HOUR_STEP_DEGREE == 0 && showHourLabel) {
+                int drawStep = hourLabelMode == HourLabelMode.Simple ? HOUR_STEP_DEGREE * 3 : HOUR_STEP_DEGREE;
                 if (angle % drawStep == 0) {
                     paint.setStyle(Paint.Style.FILL);
                     paint.setColor(hourLabelColor);
@@ -163,12 +163,12 @@ public class ClockView extends View {
                 }
                 number = (number + 1) % 12;
             }
-            angle += ANGLE_STEP;
+            angle += INDICATOR_STEP_DEGREE;
         }
 
         //update time
         paint.setStyle(Paint.Style.STROKE);
-        float hourAngle = calendar.get(Calendar.HOUR) * HOUR_ANGLE_STEP + calendar.get(Calendar.MINUTE) / 60f * HOUR_ANGLE_STEP;
+        float hourAngle = calendar.get(Calendar.HOUR) * HOUR_STEP_DEGREE + calendar.get(Calendar.MINUTE) / 60f * HOUR_STEP_DEGREE;
         float minuteAngle = (calendar.get(Calendar.MINUTE) / 60f * 360) + calendar.get(Calendar.SECOND) / 60f * 360 / 60f;
         float secondAngle = calendar.get(Calendar.SECOND) / 60f * 360;
 
