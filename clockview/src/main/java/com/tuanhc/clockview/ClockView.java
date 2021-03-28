@@ -43,6 +43,9 @@ public class ClockView extends View {
     private ClockRunnable clockRunnable;
     private Calendar calendar;
 
+    @Nullable
+    private TimeUpdateListener timeUpdateListener;
+
     public ClockView(Context context) {
         this(context, null);
     }
@@ -165,7 +168,6 @@ public class ClockView extends View {
 
         //update time
         paint.setStyle(Paint.Style.STROKE);
-        calendar = Calendar.getInstance();
         float hourAngle = calendar.get(Calendar.HOUR) * HOUR_ANGLE_STEP + calendar.get(Calendar.MINUTE) / 60f * HOUR_ANGLE_STEP;
         float minuteAngle = (calendar.get(Calendar.MINUTE) / 60f * 360) + calendar.get(Calendar.SECOND) / 60f * 360 / 60f;
         float secondAngle = calendar.get(Calendar.SECOND) / 60f * 360;
@@ -205,5 +207,19 @@ public class ClockView extends View {
             paint.setStrokeWidth(secondHandleStroke);
             canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
         }
+    }
+
+    /**
+     * called before invalidate
+     * called by @ClockRunable
+     */
+    void onTimeUpdate() {
+        this.calendar = Calendar.getInstance();
+        if (timeUpdateListener != null)
+            timeUpdateListener.onTimeUpdate(calendar);
+    }
+
+    public void setTimeUpdateListener(@Nullable TimeUpdateListener listener) {
+        this.timeUpdateListener = listener;
     }
 }
