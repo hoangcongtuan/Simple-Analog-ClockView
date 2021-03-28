@@ -18,21 +18,21 @@ public class ClockView extends View {
     private final int[] center = new int[2];
     private final int[] startPoint = new int[2];
     private final Rect textBound = new Rect();
-    private int borderStroke;
-    private int borderColor;
-    private int backgroundColor;
-    private int indicatorColor;
-    private int indicatorStroke;
-    private int indicatorLength;
+    private final int borderStroke;
+    private final int borderColor;
+    private final int backgroundColor;
+    private final int indicatorColor;
+    private final int indicatorStroke;
+    private final int indicatorLength;
     private int hourLabelColor;
-    private int hourLabelSize;
+    private final int hourLabelSize;
     private HourLabelMode hourLabelMode;
-    private int hourHandleColor;
-    private int hourHandleStroke;
-    private int minuteHandleColor;
-    private int minuteHandleStroke;
-    private int secondHandleColor;
-    private int secondHandleStroke;
+    private final int hourHandleColor;
+    private final int hourHandleStroke;
+    private final int minuteHandleColor;
+    private final int minuteHandleStroke;
+    private final int secondHandleColor;
+    private final int secondHandleStroke;
     private boolean showSecondHandle;
     private SecondHandleStyle secondHandleStyle;
     private Paint paint;
@@ -67,6 +67,7 @@ public class ClockView extends View {
         indicatorStroke = ta.getDimensionPixelSize(R.styleable.ClockView_indicatorStroke, 0);
 
 
+        hourLabelColor = ta.getColor(R.styleable.ClockView_hourLabelColor, 0);
         hourLabelSize = ta.getDimensionPixelSize(R.styleable.ClockView_hourLabelSize, 0);
         hourLabelMode = HourLabelMode.values()[
                 ta.getInt(R.styleable.ClockView_hourLabelMode, HourLabelMode.Full.getValue())
@@ -77,6 +78,7 @@ public class ClockView extends View {
         minuteHandleColor = ta.getColor(R.styleable.ClockView_minuteHandleColor, 0);
         minuteHandleStroke = ta.getDimensionPixelSize(R.styleable.ClockView_minuteHandleStroke, 0);
 
+        showSecondHandle = ta.getBoolean(R.styleable.ClockView_showSecondHandle, true);
         secondHandleColor = ta.getColor(R.styleable.ClockView_secondHandleColor, 0);
         secondHandleStroke = ta.getDimensionPixelSize(R.styleable.ClockView_secondHandleStroke, 0);
         secondHandleStyle = SecondHandleStyle.values()[
@@ -140,17 +142,20 @@ public class ClockView extends View {
 
             //draw label
             if (angle % HOUR_ANGLE_STEP == 0) {
-                paint.setStyle(Paint.Style.FILL);
-                paint.setColor(indicatorColor);
-                paint.setTextSize(hourLabelSize);
+                int drawStep = hourLabelMode == HourLabelMode.Simple ? HOUR_ANGLE_STEP * 3 : HOUR_ANGLE_STEP;
+                if (angle % drawStep == 0) {
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setColor(hourLabelColor);
+                    paint.setTextSize(hourLabelSize);
 
-                String label = String.valueOf(number);
-                paint.getTextBounds(String.valueOf(number), 0, label.length(), textBound);
+                    String label = String.valueOf(number);
+                    paint.getTextBounds(String.valueOf(number), 0, label.length(), textBound);
 
-                p2[0] = startPoint[0];
-                p2[1] = startPoint[1] + _indicatorLength + hourLabelSize;
-                int[] pLabel = Util.rotatePoint(p2, angle, center);
-                canvas.drawText(String.valueOf(number), pLabel[0] - textBound.centerX(), pLabel[1] - textBound.centerY(), paint);
+                    p2[0] = startPoint[0];
+                    p2[1] = startPoint[1] + _indicatorLength + hourLabelSize;
+                    int[] pLabel = Util.rotatePoint(p2, angle, center);
+                    canvas.drawText(String.valueOf(number), pLabel[0] - textBound.centerX(), pLabel[1] - textBound.centerY(), paint);
+                }
                 number = (number + 1) % 12;
             }
             angle += ANGLE_STEP;
@@ -186,15 +191,17 @@ public class ClockView extends View {
         paint.setStrokeWidth(minuteHandleStroke);
         canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
 
-        //draw second handle
-        p2[0] = center[0];
-        p2[1] = (int) (center[1] - clockSize / 2 * 0.7f);
-        p2 = Util.rotatePoint(p2, secondAngle, center);
-        p1[0] = center[0];
-        p1[1] = (int) (center[1] + clockSize / 2 * 0.1);
-        p1 = Util.rotatePoint(p1, secondAngle, center);
-        paint.setColor(secondHandleColor);
-        paint.setStrokeWidth(secondHandleStroke);
-        canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
+        if (showSecondHandle) {
+            //draw second handle
+            p2[0] = center[0];
+            p2[1] = (int) (center[1] - clockSize / 2 * 0.7f);
+            p2 = Util.rotatePoint(p2, secondAngle, center);
+            p1[0] = center[0];
+            p1[1] = (int) (center[1] + clockSize / 2 * 0.1);
+            p1 = Util.rotatePoint(p1, secondAngle, center);
+            paint.setColor(secondHandleColor);
+            paint.setStrokeWidth(secondHandleStroke);
+            canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
+        }
     }
 }
