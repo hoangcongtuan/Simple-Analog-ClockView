@@ -10,17 +10,17 @@ public class Util {
      * @param origin rotate origin point
      * @return new point
      */
-    public static int[] rotatePoint(int[] point, float angle, int[] origin) {
-        int dx = point[0] - origin[0];
-        int dy = point[1] - origin[1];
+    public static float[] rotatePoint(float[] point, float angle, float[] origin) {
+        float dx = point[0] - origin[0];
+        float dy = point[1] - origin[1];
 
         double inRadian = Math.toRadians(angle);
         double cos = Math.cos(inRadian);
         double sin = Math.sin(inRadian);
 
-        int newX = (int) (dx * cos - dy * sin + origin[0]);
-        int newY = (int) (dx * sin + dy * cos + origin[1]);
-        return new int[]{
+        float newX = (float) (dx * cos - dy * sin + origin[0]);
+        float newY = (float) (dx * sin + dy * cos + origin[1]);
+        return new float[]{
                 newX, newY
         };
     }

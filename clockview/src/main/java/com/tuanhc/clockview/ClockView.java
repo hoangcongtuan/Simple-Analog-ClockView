@@ -1,5 +1,6 @@
 package com.tuanhc.clockview;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -15,8 +16,8 @@ import java.util.Calendar;
 public class ClockView extends View {
     private static final int INDICATOR_STEP_DEGREE = 360 / (12 * 5);
     private static final int HOUR_STEP_DEGREE = 360 / 12;
-    private final int[] center = new int[2];
-    private final int[] startPoint = new int[2];
+    private final float[] center = new float[2];
+    private final float[] startPoint = new float[2];
     private final Rect textBound = new Rect();
     private final int borderStroke;
     private final int borderColor;
@@ -32,16 +33,19 @@ public class ClockView extends View {
     private final int hourHandleStroke;
     private final int minuteHandleColor;
     private final int minuteHandleStroke;
+
     private final int secondHandleColor;
     private final int secondHandleStroke;
     private final boolean showSecondHandle;
     private SecondHandleStyle secondHandleStyle;
     private Paint paint;
     private int clockSize;
-    private int[] p2 = new int[2];
-    private int[] p1 = new int[2];
+    private float[] p2 = new float[2];
+    private float[] p1 = new float[2];
     private ClockRunnable clockRunnable;
     private Calendar calendar;
+    private final ValueAnimator secondDegreeValueAnimator = new ValueAnimator();
+    private float smoothSecondDegreeOffset = 0f;
 
     @Nullable
     private TimeUpdateListener timeUpdateListener;
@@ -95,6 +99,8 @@ public class ClockView extends View {
 
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        secondDegreeValueAnimator.setInterpolator(null);
+        secondDegreeValueAnimator.setFloatValues(360 / 60f);
         clockRunnable = new ClockRunnable(this);
         clockRunnable.run();
     }
@@ -106,10 +112,10 @@ public class ClockView extends View {
                 getWidth() - getPaddingStart() - getPaddingEnd(),
                 getHeight() - getPaddingTop() - getPaddingBottom())
         ;
-        center[0] = (getWidth() - getPaddingStart() - getPaddingEnd()) / 2 + getPaddingStart();
-        center[1] = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2 + getPaddingTop();
+        center[0] = (getWidth() - getPaddingStart() - getPaddingEnd()) / 2f + getPaddingStart();
+        center[1] = (getHeight() - getPaddingTop() - getPaddingBottom()) / 2f + getPaddingTop();
         startPoint[0] = center[0];
-        startPoint[1] = center[1] - clockSize / 2;
+        startPoint[1] = center[1] - clockSize / 2f;
     }
 
     @Override
@@ -134,10 +140,10 @@ public class ClockView extends View {
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(indicatorColor);
 
-            int[] p1 = Util.rotatePoint(startPoint, angle, center);
+            p1 = Util.rotatePoint(startPoint, angle, center);
 
-            int _indicatorLength = (angle % HOUR_STEP_DEGREE == 0) ? (indicatorLength * 2) : indicatorLength;
-            int _indicatorStroke = (angle % HOUR_STEP_DEGREE == 0) ? indicatorStroke * 2 : indicatorStroke;
+            float _indicatorLength = (angle % HOUR_STEP_DEGREE == 0) ? (indicatorLength * 2) : indicatorLength;
+            float _indicatorStroke = (angle % HOUR_STEP_DEGREE == 0) ? indicatorStroke * 2 : indicatorStroke;
             paint.setStrokeWidth(_indicatorStroke);
 
             p2[0] = startPoint[0];
@@ -158,7 +164,7 @@ public class ClockView extends View {
 
                     p2[0] = startPoint[0];
                     p2[1] = startPoint[1] + _indicatorLength + hourLabelSize;
-                    int[] pLabel = Util.rotatePoint(p2, angle, center);
+                    float[] pLabel = Util.rotatePoint(p2, angle, center);
                     canvas.drawText(String.valueOf(number), pLabel[0] - textBound.centerX(), pLabel[1] - textBound.centerY(), paint);
                 }
                 number = (number + 1) % 12;
@@ -186,37 +192,63 @@ public class ClockView extends View {
 
         //draw minute handle
         p2[0] = center[0];
-        p2[1] = (int) (center[1] - clockSize / 2 * 0.6f);
+        p2[1] = center[1] - clockSize / 2f * 0.6f;
         p2 = Util.rotatePoint(p2, minuteAngle, center);
         p1[0] = center[0];
-        p1[1] = (int) (center[1] + clockSize / 2 * 0.1);
+        p1[1] = center[1] + clockSize / 2f * 0.1f;
         p1 = Util.rotatePoint(p1, minuteAngle, center);
         paint.setColor(minuteHandleColor);
         paint.setStrokeWidth(minuteHandleStroke);
         canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
 
         if (showSecondHandle) {
-            //draw second handle
-            p2[0] = center[0];
-            p2[1] = (int) (center[1] - clockSize / 2 * 0.7f);
-            p2 = Util.rotatePoint(p2, secondAngle, center);
-            p1[0] = center[0];
-            p1[1] = (int) (center[1] + clockSize / 2 * 0.1);
-            p1 = Util.rotatePoint(p1, secondAngle, center);
-            paint.setColor(secondHandleColor);
-            paint.setStrokeWidth(secondHandleStroke);
-            canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
+            if (secondHandleStyle == SecondHandleStyle.Smooth) {
+                p2[0] = center[0];
+                p2[1] = center[1] - clockSize / 2f * 0.9f;
+                p2 = Util.rotatePoint(p2, secondAngle + smoothSecondDegreeOffset, center);
+                p1[0] = center[0];
+                p1[1] = center[1] + clockSize / 2f * 0.1f;
+                p1 = Util.rotatePoint(p1, secondAngle + smoothSecondDegreeOffset, center);
+                paint.setColor(secondHandleColor);
+                paint.setStrokeWidth(secondHandleStroke);
+                canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
+            } else {
+                //draw second handle
+                p2[0] = center[0];
+                p2[1] = center[1] - clockSize / 2f * 0.7f;
+                p2 = Util.rotatePoint(p2, secondAngle, center);
+                p1[0] = center[0];
+                p1[1] = center[1] + clockSize / 2f * 0.1f;
+                p1 = Util.rotatePoint(p1, secondAngle, center);
+                paint.setColor(secondHandleColor);
+                paint.setStrokeWidth(secondHandleStroke);
+                canvas.drawLine(p1[0], p1[1], p2[0], p2[1], paint);
+            }
         }
     }
 
     /**
-     * called before invalidate
-     * called by @ClockRunable
+     * called by @ClockRunnable
      */
-    void onTimeUpdate() {
+    void onTimeUpdate(long duration) {
         this.calendar = Calendar.getInstance();
         if (timeUpdateListener != null)
             timeUpdateListener.onTimeUpdate(calendar);
+        if (secondHandleStyle == SecondHandleStyle.Smooth) {
+            doAnimation(duration);
+        } else
+            invalidate();
+    }
+
+    private void doAnimation(long duration) {
+        secondDegreeValueAnimator.cancel();
+        secondDegreeValueAnimator.removeAllUpdateListeners();
+        secondDegreeValueAnimator.setDuration(duration);
+        secondDegreeValueAnimator.start();
+        secondDegreeValueAnimator.addUpdateListener(animation -> {
+            smoothSecondDegreeOffset = (float) animation.getAnimatedValue();
+            invalidate();
+        });
     }
 
     public void setTimeUpdateListener(@Nullable TimeUpdateListener listener) {

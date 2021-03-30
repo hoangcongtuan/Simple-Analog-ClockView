@@ -14,7 +14,6 @@ public class ClockRunnable implements Runnable {
     @Override
     public void run() {
         view.postDelayed(this, 1000L - System.currentTimeMillis() % 1000L);
-        view.onTimeUpdate();
-        view.invalidate();
+        view.onTimeUpdate(1000L - System.currentTimeMillis() % 1000L);
     }
 }
